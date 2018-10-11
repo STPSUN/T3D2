@@ -7,13 +7,15 @@ return [
 //    'hostname'        => '47.74.236.198',
     'hostname'        => '127.0.0.1',
     // 数据库名
-    'database'        => 't3d',
+    'database'        => 't3d2',
     // 用户名
 //    'username'        => 't3d',
+//    'username'        => 't3d2',
     'username'        => 'root',
 
     // 密码
 //    'password'        => 'TKnmizdWp6',
+//    'password'        => 'QEdkZZncDT',
     'password'        => 'root',
     // 端口
     'hostport'        => '3306',
