@@ -25,7 +25,7 @@ class Otc extends  \web\index\controller\AddonIndexBase{
         $user_id = $this->user_id ? $this->user_id : 0;
         $type = $this->_get('type',0); //0=卖出,1=买入,2=卖出订单,3=买入订单
         $status = $this->_get('status',0); //0 = all 1=close 2=unpaid 3=check pay 4=success
-        $coin_id = $this->_get('coin_id',1);
+        $coin_id = $this->_get('coin_id',2);
         if(empty($user_id) || ($type < 0) || empty($coin_id) ){
             return $this->failJSON('missing arguments');
         }

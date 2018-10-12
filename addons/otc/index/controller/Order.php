@@ -191,7 +191,7 @@ class Order extends \web\index\controller\AddonIndexBase{
             $pay_password = $this->_post('pay_password');
             $price = $this->_post('price');
             $amount = $this->_post('amount');
-            $coin_id = 1; //币种id
+            $coin_id = 2; //币种id
             $type = 0; //交易类型，0=卖出，1=买入
             $remark = $this->_post('remark');//备注
             if(empty($user_id) || empty($pay_password) || empty($price) || empty($amount) || empty($coin_id)){
@@ -295,7 +295,8 @@ class Order extends \web\index\controller\AddonIndexBase{
         }
 
         $maketM = new \web\api\model\MarketModel();
-        $rate = $maketM->getCnyRateByCoinId(1);
+//        $rate = $maketM->getCnyRateByCoinId(1);
+        $rate = $this->getUSDRate();
         $paramM = new \web\common\model\sys\SysParameterModel();
         $is_tax = $paramM->getValByName('is_tax');
         $tax_rate = 0; //手续费金额 下单方出
@@ -308,6 +309,17 @@ class Order extends \web\index\controller\AddonIndexBase{
         $this->setLoadDataAction('');
         $this->assign('title','OTC');
         return $this->fetch('otc/sold');
+    }
+
+    private function getUSDRate() {
+        $keyword = '美元';
+        $filter = '';
+        $m = new \addons\config\model\ExchangeRate();
+        if ($keyword != null) {
+            $filter = ' name like \'%' . $keyword . '%\'';
+        }
+        $rows = $m->getDataList($this->getPageIndex(), $this->getPageSize(), $filter);
+        return $rows[0]['rate'];
     }
 
     /**

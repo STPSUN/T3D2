@@ -32,7 +32,8 @@ class Game extends \web\user\controller\AddonUserBase{
             }
         } else {
             $m = new \addons\config\model\Coins();
-            $data = $m->getDataList(-1,-1,'','','id asc');
+            $filter = 'id = 2';
+            $data = $m->getDataList(-1,-1,$filter,'','id asc');
             $this->assign('id',$this->_get('id'));
             $this->setLoadDataAction('loadData');
             $this->assign('coin_list',$data);

@@ -120,7 +120,8 @@ class Member extends \web\user\controller\AddonUserBase{
             
         }else{
             $m = new \addons\config\model\Coins();
-            $list = $m->getDataList(-1,-1,'','id,coin_name','id asc');
+            $filter = 'id = 2';
+            $list = $m->getDataList(-1,-1,$filter,'id,coin_name','id asc');
             $this->assign('coins',$list);
             $this->assign('id',$this->_get('id'));
             return $this->fetch();

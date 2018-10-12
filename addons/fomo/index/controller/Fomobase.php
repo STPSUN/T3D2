@@ -63,7 +63,7 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
             }
             $res = $this->checkOrder($user_id, $address, $coin_id, $transaction_list);
         }
-        return $this->successData(1);
+        return $this->successData();
 
     }
     
@@ -79,6 +79,7 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
         $m = new \addons\eth\model\EthTradingOrder();
         $balanceM = new \addons\member\model\Balance();
         $recordM = new \addons\member\model\TradingRecord();
+        $ittm_coin_id = 2;
         foreach($list as $val){
             $txhash = $val['hash'];
             $block_number = $val['block_number'];
@@ -104,6 +105,20 @@ class Fomobase extends \web\index\controller\AddonIndexBase{
                     $change_type = 1; //增加
                     $remark = '外网转入';
                     $_id = $recordM->addRecord($user_id, $coin_id, $amount, $before_amount, $after_amount, $type, $change_type, $user_id, $address, '', $remark);
+
+                    //ETH换算ITTM
+                    $maketM = new \web\api\model\MarketModel();
+                    $rate = $maketM->getUsdtRateByCoinId($coin_id);
+                    $ittm_amount = bcmul($amount,$rate,8);
+                    $ittm_balance = $balanceM->updateBalance($user_id, $ittm_amount, $ittm_coin_id, true);
+                    if(!$ittm_balance){
+                        $m->rollback();
+                        return false;
+                    }
+                    $type = 2;
+                    $ittm_before_amount = $ittm_balance['before_amount'];
+                    $ittm_after_amount = $ittm_balance['amount'];
+                    $recordM->addRecord($user_id, $ittm_coin_id, $ittm_amount, $ittm_before_amount, $ittm_after_amount, $type, $change_type, $user_id, $address, '', $remark);
                     if(!$_id ){
                         $m->rollback();
                         return false;
